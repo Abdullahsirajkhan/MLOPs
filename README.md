@@ -18,11 +18,6 @@ The paper tests on 6 datasets across 4 tasks. Given our compute budget (Kaggle's
 
 One thing worth being upfront about: the authors run each dataset 5 times and report the mean ± std to smooth out random seed variance. We ran it once (Run 1 of their 5-run loop) — running all 5 would've meant ~1000 epochs, which wasn't realistic on our quota.
 
-We asked our TA directly whether all 6 datasets were required and whether we could use the authors' code as-is:
-
-> "You have to judge your compute decisions on your own, if it can be run on all 6 datasets with the resources available to you, then def go for it. If there's some extra GPU/memory needed you can choose to limit."
-
-Given ClinicDB alone took ~1.5 hours for one run, running all 6 datasets x 5 seeds each wasn't realistic on a single free Kaggle GPU session, so we scoped down to one dataset, one run, and put our effort into understanding and verifying that one result properly instead of spreading thin across six.
 
 ---
 
@@ -55,13 +50,12 @@ Given ClinicDB alone took ~1.5 hours for one run, running all 6 datasets x 5 see
 └── README.md
 ```
 
-> Update this tree if your actual folder names differ — this reflects what's referenced elsewhere in this README.
 
 ---
 
 ## 3. Background — what came before MK-UNet
 
-Before getting into what we built, a quick summary of the landscape the paper is responding to (this is our own summary from reading the paper's related work, not copied from it):
+Before getting into what we built, a quick summary of the landscape the paper is responding to: 
 
 - **CNN encoder-decoders** (U-Net, U-Net++, Attention U-Net, PraNet, DeepLabv3+) were the standard approach for years. They work well but get computationally heavy, especially once attention mechanisms are added, which makes them a poor fit for point-of-care or edge deployment.
 - **Vision Transformers** (TransUNet, SwinUNet, MedT) came next, using self-attention to capture long-range relationships across the image. The tradeoff is that they tend to lose track of fine local detail and are even more expensive to run than the CNNs they were meant to improve on.
@@ -117,7 +111,6 @@ We didn't touch the architecture at all — see the provenance section for exact
 | Params | 0.316 M | 0.3156 M (315,566) |
 | FLOPs | 0.314 G | 0.619 G |
 
-**On the FLOPs number** — we initially thought this was just profiler/hardware noise, but that's not right, and we want to correct ourselves here rather than leave it in: the paper's Table 1 explicitly says FLOPs are reported at 256x256 input, but Section 4.2 says ClinicDB is actually trained/evaluated at 352x352. If you scale their number by the resolution difference — 0.314G x (352/256)^2 ≈ 0.594G — it lands right around our measured 0.619G. So the gap is just resolution, exactly as the paper's own footnote says, not an environment quirk. Params matching almost exactly (315,566 vs 316,000) is the real confirmation that the architecture is implemented correctly.
 
 ---
 
@@ -150,7 +143,6 @@ While going through the paper in Stage 2, we built short Manim animations to wal
 - **MKIR** (Multi-Kernel Inverted Residual) — expand → multi-kernel depthwise conv → project back down
 - **MKDC** (Multi-Kernel Depthwise Convolution) — the parallel 1x1/3x3/5x5 depthwise branches + channel shuffle
 - **MKIRA** (Multi-Kernel Inverted Residual Attention) — channel attention → spatial attention → MKIR, used in the decoder
-https://github.com/Abdullahsirajkhan/MLOPs---
 
 ## 9. Honest discussion of the gap
 
