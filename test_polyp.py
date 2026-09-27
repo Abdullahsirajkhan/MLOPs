@@ -75,8 +75,9 @@ def test(model, path, dataset, opt, save_base=None):
     with torch.no_grad():
         for pack in tqdm(test_loader, desc=f"Inference on {dataset}"):
             images, gts, original_shapes, names = pack       
-            images = images.cuda()
-            gts = gts.cuda().float()
+            # Removed .cuda() for CPU execution
+            images = images
+            gts = gts.float()
 
             ress = model(images)
             predictions = ress[0] if isinstance(ress, list) else ress
@@ -141,7 +142,9 @@ if __name__ == '__main__':
     # --- Paths ---
     save_base = f'./predictions_polyp/{opt.run_id}/{opt.dataset_name}/{opt.split}'
     os.makedirs(save_base, exist_ok=True)
-    model_path = os.path.join(f'./model_pth/{opt.run_id}/', f'{opt.run_id}-best.pth')
+    
+    # Hardcoded to your exact path
+    model_path = './models/best.pth'
 
     opt.test_path = f'{opt.test_path}/{opt.dataset_name}/'
 
@@ -155,8 +158,10 @@ if __name__ == '__main__':
     }
     
     channels = NET_CONFIGS.get(opt.network, NET_CONFIGS['MK_UNet'])
-    model = MK_UNet(num_classes=1, in_channels=3, channels=channels).cuda()
-    model.load_state_dict(torch.load(model_path), strict=False)
+    
+    # Removed .cuda() and added map_location='cpu'
+    model = MK_UNet(num_classes=1, in_channels=3, channels=channels)
+    model.load_state_dict(torch.load(model_path, map_location='cpu'), strict=False)
     model.eval()
 
     # --- Run Inference ---
@@ -169,6 +174,7 @@ if __name__ == '__main__':
     mean_row['Name'] = 'AVERAGE'
     df = pd.concat([df, pd.DataFrame([mean_row])], ignore_index=True)
     
+    os.makedirs('results_polyp', exist_ok=True)
     excel_name = f'results_polyp/Results_{opt.run_id}_{opt.dataset_name}_{opt.split}.xlsx'
     df.to_excel(excel_name, index=False)
 
