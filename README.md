@@ -53,7 +53,7 @@ One thing worth being upfront about: the authors run each dataset 5 times and re
 
 ## 3. Background — what came before MK-UNet
 
-Before getting into what we built, a quick summary of the landscape the paper is responding to (this is our own summary from reading the paper's related work, not copied from it):
+Before getting into what we built, here is a quick summary of the landscape the paper is responding to:
 
 - **CNN encoder-decoders** (U-Net, U-Net++, Attention U-Net, PraNet, DeepLabv3+) were the standard approach for years. They work well but get computationally heavy, especially once attention mechanisms are added, which makes them a poor fit for point-of-care or edge deployment.
 - **Vision Transformers** (TransUNet, SwinUNet, MedT) came next, using self-attention to capture long-range relationships across the image. The tradeoff is that they tend to lose track of fine local detail and are even more expensive to run than the CNNs they were meant to improve on.
@@ -108,8 +108,6 @@ We didn't touch the architecture at all — see the provenance section for exact
 | HD95 | not reported | 11.58 |
 | Params | 0.316 M | 0.3156 M (315,566) |
 | FLOPs | 0.314 G* | 0.619 G* |
-
-**On the FLOPs number** — we initially thought this was just profiler/hardware noise, but that's not right, and we want to correct ourselves here rather than leave it in: the paper's Table 1 explicitly says FLOPs are reported at 256x256 input, but Section 4.2 says ClinicDB is actually trained/evaluated at 352x352. If you scale their number by the resolution difference — 0.314G x (352/256)^2 ≈ 0.594G — it lands right around our measured 0.619G. So the gap is just resolution, exactly as the paper's own footnote says, not an environment quirk. Params matching almost exactly (315,566 vs 316,000) is the real confirmation that the architecture is implemented correctly.
 
 ---
 
