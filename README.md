@@ -18,12 +18,6 @@ The paper tests on 6 datasets across 4 tasks. Given our compute budget (Kaggle's
 
 One thing worth being upfront about: the authors run each dataset 5 times and report the mean ± std to smooth out random seed variance. We ran it once (Run 1 of their 5-run loop) — running all 5 would've meant ~1000 epochs, which wasn't realistic on our quota.
 
-We asked our TA directly whether all 6 datasets were required and whether we could use the authors' code as-is:
-
-> "You have to judge your compute decisions on your own, if it can be run on all 6 datasets with the resources available to you, then def go for it. If there's some extra GPU/memory needed you can choose to limit."
-
-Given ClinicDB alone took ~1.5 hours for one run, running all 6 datasets x 5 seeds each wasn't realistic on a single free Kaggle GPU session, so we scoped down to one dataset, one run, and put our effort into understanding and verifying that one result properly instead of spreading thin across six.
-
 ---
 
 ## 2. Repository structure
@@ -54,8 +48,6 @@ Given ClinicDB alone took ~1.5 hours for one run, running all 6 datasets x 5 see
 ├── LICENSE
 └── README.md
 ```
-
-> Update this tree if your actual folder names differ — this reflects what's referenced elsewhere in this README.
 
 ---
 
