@@ -150,11 +150,7 @@ While going through the paper in Stage 2, we built short Manim animations to wal
 - **MKIR** (Multi-Kernel Inverted Residual) — expand → multi-kernel depthwise conv → project back down
 - **MKDC** (Multi-Kernel Depthwise Convolution) — the parallel 1x1/3x3/5x5 depthwise branches + channel shuffle
 - **MKIRA** (Multi-Kernel Inverted Residual Attention) — channel attention → spatial attention → MKIR, used in the decoder
-- **GAG** (Grouped Attention Gate) — how the skip connection and the gating signal from the decoder get merged and gated
-
-These live in the `manim/` folder in the repo — rendering and adding the final clips here (will update this section with previews/links once done).
-
----
+https://github.com/Abdullahsirajkhan/MLOPs---
 
 ## 9. Honest discussion of the gap
 
@@ -165,7 +161,7 @@ These live in the `manim/` folder in the repo — rendering and adding the final
 
 ---
 
-## 10. Code provenance / academic integrity log
+## 10. Code provenance 
 
 **Reused as-is from the official repo:**
 - `mkunet_network.py` — full network (MKIR, MKDC, MKIRA, GAG blocks, encoder/decoder), untouched, to keep the architecture exactly as described.
