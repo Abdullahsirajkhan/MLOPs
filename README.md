@@ -40,8 +40,7 @@ We didn't touch the architecture at all — see the provenance section for exact
 | Precision | — | 93.92% |   
 | HD95 | not reported | 11.58 |   
 | Params | 0.316 M | 0.3156 M (315,566) |   
-| FLOPs | 0.314 G* | 0.619 G* |   
-**On the FLOPs number** — we initially thought this was just profiler/hardware noise, but that's not right, and we want to correct ourselves here rather than leave it in: the paper's Table 1 explicitly says FLOPs are reported at 256x256 input, but Section 4.2 says ClinicDB is actually trained/evaluated at 352x352. If you scale their number by the resolution difference — 0.314G x (352/256)^2 ≈ 0.594G — it lands right around our measured 0.619G. So the gap is just resolution, exactly as the paper's own footnote says, not an environment quirk. Params matching almost exactly (315,566 vs 316,000) is the real confirmation that the architecture is implemented correctly.  
+| FLOPs | 0.314 G* | 0.619 G* |     
 ## **5. Figures**  
 *(images 1.png, 2.png, 3.png should sit next to this README, or update the paths below to wherever they end up in the repo)*  
 **Training convergence (** **2.png** **)** — Test/Val Dice and IoU across all 200 epochs. Both curves climb fast in the first ~25 epochs then flatten out into a stable band, and val tracks test closely the whole way through with no overfitting drop-off. Epoch 103 is marked — that's where val Dice peaked (0.9092), and the test Dice we report (0.9290) is from that exact checkpoint.  
